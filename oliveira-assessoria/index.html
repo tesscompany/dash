@@ -6,9 +6,94 @@
   <title>Tess Creative Intelligence</title>
   <link rel="stylesheet" href="style.css?v=4.0" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    #gate {
+      position: fixed;
+      inset: 0;
+      background: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #gate.hidden { display: none; }
+    .gate-box {
+      background: #1B2543;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 40px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+    .gate-box p.eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+    }
+    .gate-box h2 {
+      font-size: 20px;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+    .gate-box input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 15px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      text-align: center;
+      letter-spacing: 0.15em;
+    }
+    .gate-box input:focus {
+      outline: none;
+      border-color: #C41E17;
+    }
+    .gate-box button {
+      width: 100%;
+      padding: 12px;
+      background: #C41E17;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .gate-box button:hover { background: #E02D2D; }
+    .gate-error {
+      color: #E02D2D;
+      font-size: 13px;
+      min-height: 18px;
+    }
+    .gate-footer {
+      margin-top: 24px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+    }
+  </style>
 </head>
 <body>
-  <main class="app">
+
+  <div id="gate">
+    <div class="gate-box">
+      <p class="eyebrow">Tess Mídia · Acesso restrito</p>
+      <h2>Oliveira Arremates</h2>
+      <input type="password" id="gateInput" placeholder="••••••••" autocomplete="off" />
+      <button id="gateBtn">Entrar</button>
+      <p class="gate-error" id="gateError"></p>
+      <p class="gate-footer">Dashboard exclusivo · Não compartilhe este acesso</p>
+    </div>
+  </div>
+
+  <main class="app" id="appMain" style="display:none">
     <section class="hero">
       <div class="hero-content">
         <p class="eyebrow">Tess Mídia · Meta Ads</p>
@@ -24,7 +109,6 @@
         <div class="loading-bar"><span id="loadingBar"></span></div>
       </div>
     </section>
-
     <section class="filters">
       <label>Data inicial <input type="date" id="startDate"></label>
       <label>Data final <input type="date" id="endDate"></label>
@@ -34,9 +118,7 @@
       <button id="copyFilterLink" type="button">Copiar link filtrado</button>
       <button id="forceRefreshData" type="button">Atualizar dados</button>
     </section>
-
     <section class="kpis" id="kpis"></section>
-
     <section class="panel performance-panel">
       <div class="panel-head">
         <div>
@@ -47,16 +129,13 @@
       </div>
       <div class="chart-shell trend-shell"><canvas id="trendChart"></canvas></div>
     </section>
-
     <section class="section-title">
       <div>
         <p class="eyebrow">Inteligência de públicos</p>
         <h2>Performance dos Públicos</h2>
       </div>
     </section>
-
     <section class="public-overview" id="publicOverview"></section>
-
     <section class="panel">
       <div class="panel-head">
         <div>
@@ -67,7 +146,6 @@
       </div>
       <div id="publicAnalysis" class="public-grid"></div>
     </section>
-
     <section class="section-title">
       <div>
         <p class="eyebrow">Hall da fama</p>
@@ -75,7 +153,6 @@
       </div>
     </section>
     <section class="fame-grid" id="hallOfFame"></section>
-
     <section class="grid two strategy-grid">
       <article class="panel strategy-panel">
         <div class="panel-head">
@@ -87,7 +164,6 @@
         </div>
         <div class="action-board" id="quadrantBoard"></div>
       </article>
-
       <article class="panel">
         <div class="panel-head">
           <div>
@@ -98,7 +174,6 @@
         <div class="insights" id="insights"></div>
       </article>
     </section>
-
     <section class="panel">
       <div class="panel-head">
         <div>
@@ -125,7 +200,6 @@
         </table>
       </div>
     </section>
-
     <section class="section-title">
       <div>
         <p class="eyebrow">Retenção de vídeo</p>
@@ -142,7 +216,6 @@
       </div>
       <div id="videoRetention" class="retention-grid"></div>
     </section>
-
     <section class="section-title">
       <div>
         <p class="eyebrow">Biblioteca visual</p>
@@ -153,7 +226,48 @@
     <div class="load-more-wrap"><button id="loadMoreCreatives" type="button">Carregar mais criativos</button></div>
   </main>
 
-<script>window.DASHBOARD_API_URL = "https://script.google.com/macros/s/AKfycbxePeRHrLGlhXyT7YPmS_q5vPxCoGPBRyrLkrfwbxhOwGdcrVDvlQi3G4Y83FeJEh9pAg/exec";</script>
+  <script>
+    (function() {
+      const HASH = "72e007b8482a6953521d8430f79694d0fac712aa499f888b094d2e2231459587";
+      const STORAGE_KEY = "tess_auth_oliveira";
+
+      async function hashSenha(senha) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(senha);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      }
+
+      function liberar() {
+        document.getElementById("gate").classList.add("hidden");
+        document.getElementById("appMain").style.display = "";
+      }
+
+      if (sessionStorage.getItem(STORAGE_KEY) === "ok") {
+        liberar();
+      }
+
+      document.getElementById("gateBtn").addEventListener("click", async function() {
+        const val = document.getElementById("gateInput").value;
+        const hash = await hashSenha(val);
+        if (hash === HASH) {
+          sessionStorage.setItem(STORAGE_KEY, "ok");
+          liberar();
+        } else {
+          document.getElementById("gateError").textContent = "Senha incorreta.";
+          document.getElementById("gateInput").value = "";
+          document.getElementById("gateInput").focus();
+        }
+      });
+
+      document.getElementById("gateInput").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") document.getElementById("gateBtn").click();
+      });
+    })();
+  </script>
+
+  <script>window.DASHBOARD_API_URL = "https://script.google.com/macros/s/AKfycbxePeRHrLGlhXyT7YPmS_q5vPxCoGPBRyrLkrfwbxhOwGdcrVDvlQi3G4Y83FeJEh9pAg/exec";</script>
   <script src="app.js?v=3.9"></script>
 </body>
 </html>

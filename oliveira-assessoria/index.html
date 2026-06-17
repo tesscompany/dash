@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tess Creative Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=4.0" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">Tess Mídia · Meta Ads</p>
+        <p class="client-kicker">OLIVEIRA ARREMATES</p>
+        <h1>CAMPANHAS ASSESSORIA</h1>
+        <p class="project-title">Creative Intelligence Dashboard</p>
+        <p class="subtitle">Análise visual dos criativos que geram atenção, leads e eficiência real.</p>
+      </div>
+      <div class="hero-card">
+        <span>Status da análise</span>
+        <strong id="status">Carregando...</strong>
+        <p id="periodLabel">Lendo dados da planilha</p>
+        <div class="loading-bar"><span id="loadingBar"></span></div>
+      </div>
+    </section>
+
+    <section class="filters">
+      <label>Data inicial <input type="date" id="startDate"></label>
+      <label>Data final <input type="date" id="endDate"></label>
+      <label>Campanha <select id="campaignFilter"><option value="">Todas</option></select></label>
+      <label>Conjunto <select id="adsetFilter"><option value="">Todos</option></select></label>
+      <button id="clearFilters">Limpar</button>
+      <button id="copyFilterLink" type="button">Copiar link filtrado</button>
+      <button id="forceRefreshData" type="button">Atualizar dados</button>
+    </section>
+
+    <section class="kpis" id="kpis"></section>
+
+    <section class="panel performance-panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Evolução diária</p>
+          <h2>Valor investido x leads</h2>
+        </div>
+        <p class="muted">Dimensão: data · Métricas: investimento e leads.</p>
+      </div>
+      <div class="chart-shell trend-shell"><canvas id="trendChart"></canvas></div>
+    </section>
+
+    <section class="section-title">
+      <div>
+        <p class="eyebrow">Inteligência de públicos</p>
+        <h2>Performance dos Públicos</h2>
+      </div>
+    </section>
+
+    <section class="public-overview" id="publicOverview"></section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Análise de Públicos</p>
+          <h2>Ranking de públicos</h2>
+        </div>
+        <p class="muted">Dados consolidados por público da campanha.</p>
+      </div>
+      <div id="publicAnalysis" class="public-grid"></div>
+    </section>
+
+    <section class="section-title">
+      <div>
+        <p class="eyebrow">Hall da fama</p>
+        <h2>Os criativos que merecem atenção agora</h2>
+      </div>
+    </section>
+    <section class="fame-grid" id="hallOfFame"></section>
+
+    <section class="grid two strategy-grid">
+      <article class="panel strategy-panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Matriz estratégica</p>
+            <h2>Plano de ação dos criativos</h2>
+          </div>
+          <p class="muted">Os principais criativos já classificados por ação.</p>
+        </div>
+        <div class="action-board" id="quadrantBoard"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Diagnóstico</p>
+            <h2>Insights automáticos</h2>
+          </div>
+        </div>
+        <div class="insights" id="insights"></div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Score Tess™</p>
+          <h2>Ranking inteligente de criativos</h2>
+        </div>
+        <p class="muted">Clique no nome do criativo para abrir no Instagram, quando houver link.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Score</th>
+              <th>Classe</th>
+              <th>Criativo</th>
+              <th>Gasto</th>
+              <th>Leads</th>
+              <th>CPL</th>
+              <th>CTR</th>
+              <th>Participação</th>
+            </tr>
+          </thead>
+          <tbody id="rankingBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section-title">
+      <div>
+        <p class="eyebrow">Retenção de vídeo</p>
+        <h2>Análise de atenção nos vídeos</h2>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Inteligência de vídeo</p>
+          <h2>Onde o público para de assistir</h2>
+        </div>
+        <p class="muted">Taxas relativas à audiência dos primeiros 15 segundos. Apenas criativos de vídeo.</p>
+      </div>
+      <div id="videoRetention" class="retention-grid"></div>
+    </section>
+
+    <section class="section-title">
+      <div>
+        <p class="eyebrow">Biblioteca visual</p>
+        <h2>Criativos classificados automaticamente</h2>
+      </div>
+    </section>
+    <section class="creative-grid" id="creativeGrid"></section>
+    <div class="load-more-wrap"><button id="loadMoreCreatives" type="button">Carregar mais criativos</button></div>
+  </main>
+
+<script>window.DASHBOARD_API_URL = "https://script.google.com/macros/s/AKfycbxePeRHrLGlhXyT7YPmS_q5vPxCoGPBRyrLkrfwbxhOwGdcrVDvlQi3G4Y83FeJEh9pAg/exec";</script>
+  <script src="app.js?v=3.9"></script>
+</body>
+</html>
